@@ -1,5 +1,8 @@
 package com.mersiyanov.dmitry.find_a_movie.POJO;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -9,10 +12,26 @@ import java.util.List;
  * Created by Dmitry on 17.03.2018.
  */
 
-public class MovieInfo {
+public class MovieInfo implements Parcelable {
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    private boolean isFavorite;
+
     @SerializedName("Title")
     @Expose
     private String title;
+
+    @SerializedName("Error")
+    @Expose
+    private String error;
+
     @SerializedName("Year")
     @Expose
     private String year;
@@ -86,12 +105,64 @@ public class MovieInfo {
     @Expose
     private String response;
 
+    public MovieInfo(Parcel in) {
+        title = in.readString();
+        error = in.readString();
+        year = in.readString();
+        rated = in.readString();
+        released = in.readString();
+        runtime = in.readString();
+        genre = in.readString();
+        director = in.readString();
+        writer = in.readString();
+        actors = in.readString();
+        plot = in.readString();
+        language = in.readString();
+        country = in.readString();
+        awards = in.readString();
+        poster = in.readString();
+        metascore = in.readString();
+        imdbRating = in.readString();
+        imdbVotes = in.readString();
+        imdbID = in.readString();
+        type = in.readString();
+        dVD = in.readString();
+        boxOffice = in.readString();
+        production = in.readString();
+        website = in.readString();
+        response = in.readString();
+    }
+
+    public MovieInfo(){
+
+    }
+
+    public static final Creator<MovieInfo> CREATOR = new Creator<MovieInfo>() {
+        @Override
+        public MovieInfo createFromParcel(Parcel in) {
+            return new MovieInfo(in);
+        }
+
+        @Override
+        public MovieInfo[] newArray(int size) {
+            return new MovieInfo[size];
+        }
+    };
+
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 
     public String getYear() {
@@ -286,4 +357,37 @@ public class MovieInfo {
         this.response = response;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(error);
+        dest.writeString(year);
+        dest.writeString(rated);
+        dest.writeString(released);
+        dest.writeString(runtime);
+        dest.writeString(genre);
+        dest.writeString(director);
+        dest.writeString(writer);
+        dest.writeString(actors);
+        dest.writeString(plot);
+        dest.writeString(language);
+        dest.writeString(country);
+        dest.writeString(awards);
+        dest.writeString(poster);
+        dest.writeString(metascore);
+        dest.writeString(imdbRating);
+        dest.writeString(imdbVotes);
+        dest.writeString(imdbID);
+        dest.writeString(type);
+        dest.writeString(dVD);
+        dest.writeString(boxOffice);
+        dest.writeString(production);
+        dest.writeString(website);
+        dest.writeString(response);
+    }
 }

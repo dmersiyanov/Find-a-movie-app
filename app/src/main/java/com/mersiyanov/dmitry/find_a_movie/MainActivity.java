@@ -1,28 +1,83 @@
 
 package com.mersiyanov.dmitry.find_a_movie;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.mersiyanov.dmitry.find_a_movie.POJO.MovieInfo;
 
 import rx.Observable;
 import rx.Observer;
-import rx.Scheduler;
-import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final String API_KEY = "d160bbfc";
+    SearchView searchView;
+    MoviesAdapter moviesAdapter = new MoviesAdapter(this);
+    ImageView favoriteIcon;
+    Button btnSearch;
+    Button btnFavorites;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Observable<MovieInfo> responseMovies = MovieApp.getApi().getMovieInfo("d160bbfc", "die+hard");
+        RecyclerView recyclerView = findViewById(R.id.movies_rv);
+        btnFavorites = findViewById(R.id.btn_favorites);
+        btnSearch = findViewById(R.id.btn_search);
 
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(moviesAdapter);
+
+        searchView = findViewById(R.id.search_bar);
+
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
+
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+//                Toast.makeText(getApplicationContext(), searchView.getQuery(), Toast.LENGTH_LONG).show();
+               getMovieFromImdb(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+
+
+
+
+
+
+
+    }
+
+    private void getMovieFromImdb(String title) {
+
+        Observable <MovieInfo> responseMovies = MovieApp.getApi().getMovieInfo(API_KEY, title);
         responseMovies.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<MovieInfo>() {
@@ -33,18 +88,46 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        System.out.println(e.getLocalizedMessage());
+                        Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
 
                     }
 
                     @Override
                     public void onNext(MovieInfo movieInfo) {
-
-                        String movieTitle = movieInfo.getGenre();
-                        System.out.println(movieTitle);
-
+                        if(movieInfo.getResponse().equals("False"))
+                            Toast.makeText(getApplicationContext(), movieInfo.getError(), Toast.LENGTH_LONG).show();
+                        else  {
+                            moviesAdapter.addMovie(movieInfo);
+                        }
                     }
                 });
+
+    }
+
+    public void startFavoritesActivity(Intent intent){
+
+        startActivity(intent);
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_favorite:
+                Intent intent = new Intent(this, FavoritesActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
 
     }
