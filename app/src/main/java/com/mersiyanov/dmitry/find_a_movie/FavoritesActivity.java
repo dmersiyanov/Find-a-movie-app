@@ -37,10 +37,13 @@ public class FavoritesActivity extends AppCompatActivity {
         RealmResults<MovieInfo> movieInfoRealmResults = mRealm.where(MovieInfo.class).equalTo("isFavorite", true).findAll();
         mRealm.commitTransaction();
 
+        adapter.addFavoriteMovies(movieInfoRealmResults);
+
 //        if(movieInfoRealmResults != null) {
 //            recyclerView.setVisibility(View.VISIBLE);
 //            adapter.addFavoriteMovies(movieInfoRealmResults);
 //        }
+
 
 
 
