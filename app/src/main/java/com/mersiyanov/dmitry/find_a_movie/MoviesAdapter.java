@@ -57,7 +57,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
         holder.movieTitle.setText(movieInfo.getTitle());
         holder.movieYear.setText(movieInfo.getYear());
-        Picasso.get().load(movieInfo.getPoster()).resize(300, 300).centerInside().into(holder.moviePoster);
+        Picasso.get().load(movieInfo.getPoster()).resize(350, 350).centerInside().into(holder.moviePoster);
 
         if(movieInfo.getFavorite()) {
             holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
