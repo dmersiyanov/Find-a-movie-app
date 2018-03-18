@@ -26,8 +26,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
     private RealmList<MovieInfo> favoriteMovies = new RealmList<>();
     private Realm mRealm;
 
-    public FavoritesAdapter(Context context) {
-        mRealm = Realm.getDefaultInstance();
+    public FavoritesAdapter(Context context, Realm realm) {
+        mRealm = realm;
         this.context = context;
 
     }
@@ -51,7 +51,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
         holder.movieTitle.setText(movieInfo.getTitle());
         holder.movieYear.setText(movieInfo.getYear());
-        Picasso.get().load(movieInfo.getPoster()).resize(300, 300).centerInside().into(holder.moviePoster);
+        Picasso.get().load(movieInfo.getPoster()).resize(350, 350).centerInside().into(holder.moviePoster);
         holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
 
         holder.addToFavorites.setOnClickListener(new View.OnClickListener() {

@@ -14,8 +14,8 @@ import io.realm.RealmResults;
 
 public class FavoritesActivity extends AppCompatActivity {
 
-    FavoritesAdapter adapter = new FavoritesAdapter(this);
     private Realm mRealm;
+    FavoritesAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +28,13 @@ public class FavoritesActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
+        mRealm = Realm.getDefaultInstance();
+        adapter = new FavoritesAdapter(this, mRealm);
+
         RecyclerView recyclerView = findViewById(R.id.favorites_rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        mRealm = Realm.getDefaultInstance();
         mRealm.beginTransaction();
         RealmResults<MovieInfo> movieInfoRealmResults = mRealm.where(MovieInfo.class).equalTo("isFavorite", true).findAll();
         mRealm.commitTransaction();
@@ -44,10 +46,11 @@ public class FavoritesActivity extends AppCompatActivity {
 //            adapter.addFavoriteMovies(movieInfoRealmResults);
 //        }
 
+    }
 
-
-
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
     }
 }

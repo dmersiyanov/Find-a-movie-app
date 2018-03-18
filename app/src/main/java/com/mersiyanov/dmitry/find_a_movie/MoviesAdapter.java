@@ -27,8 +27,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     private Realm mRealm;
 
 
-    public MoviesAdapter(Context context) {
-        mRealm = Realm.getDefaultInstance();
+    public MoviesAdapter(Context context, Realm realm) {
+        mRealm = realm;
         this.context = context;
 
     }

@@ -18,6 +18,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <SearchView
+        android:paddingTop="5dp"
         android:id="@+id/search_bar"
         android:imeOptions="actionSearch"
         android:iconifiedByDefault="false"
@@ -29,7 +30,9 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/movies_rv"
-        android:padding="16dp"
+        android:paddingTop="5dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

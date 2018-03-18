@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final String API_KEY = "d160bbfc";
     SearchView searchView;
-    MoviesAdapter moviesAdapter = new MoviesAdapter(this);
+    MoviesAdapter moviesAdapter;
     private Realm mRealm;
 
     @Override
@@ -34,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RecyclerView recyclerView = findViewById(R.id.movies_rv);
+
+        mRealm = Realm.getDefaultInstance();
+        moviesAdapter = new MoviesAdapter(this, mRealm);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        mRealm = Realm.getDefaultInstance();
+
         mRealm.beginTransaction();
         RealmResults<MovieInfo> movieInfoRealmResults = mRealm.where(MovieInfo.class).findAll();
         mRealm.commitTransaction();
@@ -107,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
+
     }
 
     @Override
@@ -119,5 +123,11 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mRealm.close();
     }
 }
