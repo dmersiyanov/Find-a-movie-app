@@ -6,24 +6,27 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import io.realm.RealmObject;
+import io.realm.annotations.Required;
 
 /**
  * Created by Dmitry on 17.03.2018.
  */
 
-public class MovieInfo implements Parcelable {
+public class MovieInfo extends RealmObject implements Parcelable {
 
-    public boolean isFavorite() {
-        return isFavorite;
-    }
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
     }
 
+    public boolean getFavorite() {
+        return isFavorite;
+    }
+
     private boolean isFavorite;
 
+    @Required
     @SerializedName("Title")
     @Expose
     private String title;
@@ -71,9 +74,11 @@ public class MovieInfo implements Parcelable {
     @SerializedName("Poster")
     @Expose
     private String poster;
-    @SerializedName("Ratings")
-    @Expose
-    private List<Rating> ratings = null;
+
+//    @SerializedName("Ratings")
+//    @Expose
+//    private List<Rating> ratings = null;
+
     @SerializedName("Metascore")
     @Expose
     private String metascore;
@@ -269,13 +274,13 @@ public class MovieInfo implements Parcelable {
         this.poster = poster;
     }
 
-    public List<Rating> getRatings() {
-        return ratings;
-    }
-
-    public void setRatings(List<Rating> ratings) {
-        this.ratings = ratings;
-    }
+//    public List<Rating> getRatings() {
+//        return ratings;
+//    }
+//
+//    public void setRatings(List<Rating> ratings) {
+//        this.ratings = ratings;
+//    }
 
     public String getMetascore() {
         return metascore;

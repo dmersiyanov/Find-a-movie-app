@@ -9,13 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.mersiyanov.dmitry.find_a_movie.POJO.MovieInfo;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -27,9 +28,7 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView;
     MoviesAdapter moviesAdapter = new MoviesAdapter(this);
     ImageView favoriteIcon;
-    Button btnSearch;
-    Button btnFavorites;
-
+    private Realm mRealm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         RecyclerView recyclerView = findViewById(R.id.movies_rv);
-        btnFavorites = findViewById(R.id.btn_favorites);
-        btnSearch = findViewById(R.id.btn_search);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -48,6 +45,19 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+
+        mRealm = Realm.getDefaultInstance();
+
+        mRealm = Realm.getDefaultInstance();
+
+        mRealm.beginTransaction();
+
+        RealmResults<MovieInfo> movieInfoRealmResults = mRealm.where(MovieInfo.class).findAll();
+
+        mRealm.commitTransaction();
+
+        moviesAdapter.addMovies(movieInfoRealmResults);
+
 
 
 
@@ -98,6 +108,10 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), movieInfo.getError(), Toast.LENGTH_LONG).show();
                         else  {
                             moviesAdapter.addMovie(movieInfo);
+
+                            mRealm.beginTransaction();
+                            mRealm.copyToRealm(movieInfo);
+                            mRealm.commitTransaction();
                         }
                     }
                 });

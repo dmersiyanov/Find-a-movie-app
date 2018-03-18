@@ -3,11 +3,13 @@ package com.mersiyanov.dmitry.find_a_movie.POJO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Dmitry on 17.03.2018.
  */
 
-public class Rating {
+public class Rating extends RealmObject {
     @SerializedName("Source")
     @Expose
     private String source;

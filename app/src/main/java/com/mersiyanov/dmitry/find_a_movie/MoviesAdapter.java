@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mersiyanov.dmitry.find_a_movie.POJO.MovieInfo;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 /**
  * Created by Dmitry on 17.03.2018.
@@ -23,18 +23,25 @@ import java.util.List;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
     private Context context;
-    public List<MovieInfo> movies = new ArrayList<>();
+    private RealmList<MovieInfo> movies = new RealmList<>();
+    private Realm mRealm;
+
 
     public MoviesAdapter(Context context) {
+        mRealm = Realm.getDefaultInstance();
         this.context = context;
+
     }
 
-    public void setMovies(List<MovieInfo> movies) {
-        this.movies = movies;
-    }
+//test
 
     public void addMovie(MovieInfo movie) {
         movies.add(movie);
+        notifyDataSetChanged();
+    }
+
+    public void addMovies(RealmResults<MovieInfo> realmResults) {
+        movies.addAll(realmResults);
         notifyDataSetChanged();
     }
 
@@ -53,14 +60,27 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         holder.movieTitle.setText(movieInfo.getTitle());
         holder.movieYear.setText(movieInfo.getYear());
         Picasso.get().load(movieInfo.getPoster()).resize(300, 300).centerInside().into(holder.moviePoster);
+
+        if(movieInfo.getFavorite()) {
+            holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.favorite_movie));
+        }
+
+
         holder.addToFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                movieInfo.setFavorite(true);
+
+                mRealm.beginTransaction();
+                mRealm.copyToRealm(movieInfo);
+                mRealm.commitTransaction();
+
+
                 Intent intent = new Intent(context, FavoritesActivity.class);
-                intent.putExtra("Favorite", movieInfo);
                 context.startActivity(intent);
 
-                Toast.makeText(context, "Выбран элемент ==" + holder.getAdapterPosition(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(context, "Выбран элемент ==" + holder.getAdapterPosition(), Toast.LENGTH_LONG).show();
             }
         });
 
@@ -83,6 +103,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             movieYear = itemView.findViewById(R.id.movie_year);
             moviePoster = itemView.findViewById(R.id.movie_poster);
             addToFavorites = itemView.findViewById(R.id.favorite_icon);
+
+
         }
     }
 

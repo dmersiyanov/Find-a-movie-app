@@ -2,6 +2,7 @@ package com.mersiyanov.dmitry.find_a_movie;
 
 import android.app.Application;
 
+import io.realm.Realm;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -20,6 +21,7 @@ public class MovieApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Realm.init(this);
 
         final OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
