@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -27,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     private final String API_KEY = "d160bbfc";
     SearchView searchView;
     MoviesAdapter moviesAdapter = new MoviesAdapter(this);
-    ImageView favoriteIcon;
     private Realm mRealm;
 
     @Override
@@ -47,27 +45,18 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         mRealm = Realm.getDefaultInstance();
-
-        mRealm = Realm.getDefaultInstance();
-
         mRealm.beginTransaction();
-
         RealmResults<MovieInfo> movieInfoRealmResults = mRealm.where(MovieInfo.class).findAll();
-
         mRealm.commitTransaction();
 
         moviesAdapter.addMovies(movieInfoRealmResults);
 
 
-
-
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-//                Toast.makeText(getApplicationContext(), searchView.getQuery(), Toast.LENGTH_LONG).show();
                getMovieFromImdb(query);
-                return true;
+               return true;
             }
 
             @Override
@@ -75,11 +64,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
-
-
-
 
 
 
@@ -115,14 +99,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-
     }
-
-    public void startFavoritesActivity(Intent intent){
-
-        startActivity(intent);
-    }
-
 
 
     @Override
@@ -142,7 +119,5 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-
     }
 }

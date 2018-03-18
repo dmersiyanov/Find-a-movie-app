@@ -20,26 +20,20 @@ import io.realm.RealmResults;
  * Created by Dmitry on 17.03.2018.
  */
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
     private Context context;
-    private RealmList<MovieInfo> movies = new RealmList<>();
+    private RealmList<MovieInfo> favoriteMovies = new RealmList<>();
     private Realm mRealm;
 
-
-    public MoviesAdapter(Context context) {
+    public FavoritesAdapter(Context context) {
         mRealm = Realm.getDefaultInstance();
         this.context = context;
 
     }
 
-    public void addMovie(MovieInfo movie) {
-        movies.add(0, movie);
-        notifyDataSetChanged();
-    }
-
-    public void addMovies(RealmResults<MovieInfo> realmResults) {
-        movies.addAll(realmResults);
+    public void addFavoriteMovies(RealmResults<MovieInfo> realmResults) {
+        favoriteMovies.addAll(realmResults);
         notifyDataSetChanged();
     }
 
@@ -53,39 +47,22 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final MovieInfo movieInfo = movies.get(position);
+        final MovieInfo movieInfo = favoriteMovies.get(position);
 
         holder.movieTitle.setText(movieInfo.getTitle());
         holder.movieYear.setText(movieInfo.getYear());
         Picasso.get().load(movieInfo.getPoster()).resize(300, 300).centerInside().into(holder.moviePoster);
-
-        if(movieInfo.getFavorite()) {
-            holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
-        }
-
+        holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
 
         holder.addToFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(movieInfo.getFavorite()) {
-                    mRealm.beginTransaction();
-                    movieInfo.setFavorite(false);
-                    holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.add_favorite));
-                    mRealm.commitTransaction();
-                    notifyDataSetChanged();
-                    Toast.makeText(context, movieInfo.getTitle() + " deleted from favorites", Toast.LENGTH_LONG).show();
-
-                } else {
-                    mRealm.beginTransaction();
-                    movieInfo.setFavorite(true);
-                    mRealm.copyToRealm(movieInfo);
-                    mRealm.commitTransaction();
-                    holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
-                    Toast.makeText(context, movieInfo.getTitle() + " added to favorites", Toast.LENGTH_LONG).show();
-                }
-
-
+                mRealm.beginTransaction();
+                movieInfo.setFavorite(false);
+                mRealm.commitTransaction();
+                Toast.makeText(context, movieInfo.getTitle() + " deleted from favorites", Toast.LENGTH_LONG).show();
+                favoriteMovies.remove(position);
+                notifyDataSetChanged();
             }
         });
 
@@ -93,7 +70,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        return favoriteMovies.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
