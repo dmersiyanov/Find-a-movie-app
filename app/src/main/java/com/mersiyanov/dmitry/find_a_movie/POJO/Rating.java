@@ -21,6 +21,7 @@ public class Rating extends RealmObject {
         return source;
     }
 
+
     public void setSource(String source) {
         this.source = source;
     }
