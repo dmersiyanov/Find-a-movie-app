@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @Override
+
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar, menu);
@@ -128,6 +129,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+//        mRealm.beginTransaction();
+//        mRealm.where(MovieInfo.class).equalTo("isFavorite", false).findAll().deleteAllFromRealm();
+//        mRealm.commitTransaction();
+
         mRealm.close();
     }
 }
