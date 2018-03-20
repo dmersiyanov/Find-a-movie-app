@@ -29,7 +29,7 @@
             android:authorities="com.mersiyanov.dmitry.find_a_movie.com.squareup.picasso"
             android:exported="false" />
 
-        <activity android:name=".FavoritesActivity"
+        <activity android:name=".presentation.FavoritesActivity"
             android:label="Favorites"
             android:parentActivityName=".MainActivity">
 

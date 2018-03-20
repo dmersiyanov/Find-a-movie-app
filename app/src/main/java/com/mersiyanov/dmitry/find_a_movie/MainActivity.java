@@ -9,10 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.mersiyanov.dmitry.find_a_movie.POJO.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.presentation.FavoritesActivity;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -136,4 +138,10 @@ public class MainActivity extends AppCompatActivity {
 
         mRealm.close();
     }
+
+    public void onFavoriteClick(View view) {
+
+        Toast.makeText(this, "Testdffffffffffffffffffff", Toast.LENGTH_LONG).show();
+    }
+
 }

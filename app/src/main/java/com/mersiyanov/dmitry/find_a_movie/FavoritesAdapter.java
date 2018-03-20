@@ -7,12 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mersiyanov.dmitry.find_a_movie.POJO.MovieInfo;
 import com.squareup.picasso.Picasso;
 
-import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
@@ -24,12 +22,17 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     private Context context;
     private RealmList<MovieInfo> favoriteMovies = new RealmList<>();
-    private Realm mRealm;
 
-    public FavoritesAdapter(Context context, Realm realm) {
-        mRealm = realm;
+    public FavoritesAdapter(Context context) {
         this.context = context;
 
+    }
+
+    public MovieInfo deleteFavorite(int position) {
+        MovieInfo movieInfo = favoriteMovies.get(position);
+        favoriteMovies.remove(position);
+        notifyDataSetChanged();
+        return movieInfo;
     }
 
     public void addFavoriteMovies(RealmResults<MovieInfo> realmResults) {
@@ -54,17 +57,8 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         Picasso.get().load(movieInfo.getPoster()).resize(350, 350).centerInside().into(holder.moviePoster);
         holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
 
-        holder.addToFavorites.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRealm.beginTransaction();
-                movieInfo.setFavorite(false);
-                mRealm.commitTransaction();
-                Toast.makeText(context, movieInfo.getTitle() + " deleted from favorites", Toast.LENGTH_LONG).show();
-                favoriteMovies.remove(position);
-                notifyDataSetChanged();
-            }
-        });
+        holder.addToFavorites.setTag(R.string.TAG_TITLE, movieInfo.getTitle());
+        holder.addToFavorites.setTag(R.string.TAG_POSITION, position);
 
     }
 

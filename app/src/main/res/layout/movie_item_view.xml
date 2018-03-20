@@ -45,6 +45,7 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:onClick="onFavoriteClick"
                 android:layout_alignParentTop="true"
                 android:id="@+id/favorite_icon"
                 android:layout_width="30dp"

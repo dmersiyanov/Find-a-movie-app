@@ -5,7 +5,7 @@
     android:theme="@style/Theme.AppCompat.Light.NoActionBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mersiyanov.dmitry.find_a_movie.FavoritesActivity"
+    tools:context="com.mersiyanov.dmitry.find_a_movie.presentation.FavoritesActivity"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -23,7 +23,6 @@
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.RecyclerView
-
             android:paddingTop="5dp"
             android:paddingRight="10dp"
             android:paddingLeft="16dp"
@@ -32,7 +31,7 @@
             android:layout_height="match_parent" />
 
         <ImageView
-            android:visibility="gone"
+            android:visibility="invisible"
             android:layout_gravity="center_vertical|center_horizontal"
             android:id="@+id/no_movies_img"
             android:layout_width="wrap_content"
