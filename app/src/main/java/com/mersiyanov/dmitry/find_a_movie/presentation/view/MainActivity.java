@@ -1,5 +1,5 @@
 
-package com.mersiyanov.dmitry.find_a_movie;
+package com.mersiyanov.dmitry.find_a_movie.presentation.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +13,9 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.mersiyanov.dmitry.find_a_movie.POJO.MovieInfo;
-import com.mersiyanov.dmitry.find_a_movie.presentation.FavoritesActivity;
+import com.mersiyanov.dmitry.find_a_movie.R;
+import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.presentation.adapters.MoviesAdapter;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -22,6 +23,8 @@ import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+
+import static com.mersiyanov.dmitry.find_a_movie.data.network.RetrofitHelper.getApi;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getMovieFromImdb(String title) {
 
-        Observable <MovieInfo> responseMovies = MovieApp.getApi().getMovieInfo(API_KEY, title);
+        Observable <MovieInfo> responseMovies = getApi().getMovieInfo(API_KEY, title);
         responseMovies.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<MovieInfo>() {
@@ -141,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onFavoriteClick(View view) {
 
-        Toast.makeText(this, "Testdffffffffffffffffffff", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Test", Toast.LENGTH_LONG).show();
     }
 
 }

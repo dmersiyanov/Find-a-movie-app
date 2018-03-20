@@ -1,4 +1,4 @@
-package com.mersiyanov.dmitry.find_a_movie.presentation;
+package com.mersiyanov.dmitry.find_a_movie.presentation.presenter;
 
 import android.support.v7.app.AppCompatActivity;
 

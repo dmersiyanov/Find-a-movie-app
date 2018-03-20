@@ -1,4 +1,4 @@
-package com.mersiyanov.dmitry.find_a_movie.presentation;
+package com.mersiyanov.dmitry.find_a_movie.presentation.view;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -10,9 +10,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.mersiyanov.dmitry.find_a_movie.FavoritesAdapter;
 import com.mersiyanov.dmitry.find_a_movie.R;
 import com.mersiyanov.dmitry.find_a_movie.data.DataManager;
+import com.mersiyanov.dmitry.find_a_movie.presentation.adapters.FavoritesAdapter;
+import com.mersiyanov.dmitry.find_a_movie.presentation.presenter.FavoritesPresenter;
 
 public class FavoritesActivity extends AppCompatActivity {
 

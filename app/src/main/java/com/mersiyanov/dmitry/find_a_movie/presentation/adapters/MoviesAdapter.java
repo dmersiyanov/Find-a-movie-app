@@ -1,4 +1,4 @@
-package com.mersiyanov.dmitry.find_a_movie;
+package com.mersiyanov.dmitry.find_a_movie.presentation.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mersiyanov.dmitry.find_a_movie.POJO.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.R;
+import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
 import com.squareup.picasso.Picasso;
 
 import io.realm.Realm;
@@ -20,7 +21,8 @@ import io.realm.RealmResults;
  * Created by Dmitry on 17.03.2018.
  */
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+public class
+MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
     private Context context;
     private RealmList<MovieInfo> movies = new RealmList<>();

@@ -1,6 +1,6 @@
-package com.mersiyanov.dmitry.find_a_movie;
+package com.mersiyanov.dmitry.find_a_movie.data.network;
 
-import com.mersiyanov.dmitry.find_a_movie.POJO.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;

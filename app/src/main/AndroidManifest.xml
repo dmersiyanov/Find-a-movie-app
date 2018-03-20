@@ -14,7 +14,7 @@
         android:testOnly="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         >
-        <activity android:name=".MainActivity"
+        <activity android:name=".presentation.view.MainActivity"
             >
 
             <intent-filter>
@@ -29,9 +29,9 @@
             android:authorities="com.mersiyanov.dmitry.find_a_movie.com.squareup.picasso"
             android:exported="false" />
 
-        <activity android:name=".presentation.FavoritesActivity"
+        <activity android:name=".presentation.view.FavoritesActivity"
             android:label="Favorites"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".presentation.view.MainActivity">
 
         </activity>
     </application>

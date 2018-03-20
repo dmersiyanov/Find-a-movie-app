@@ -1,6 +1,6 @@
 package com.mersiyanov.dmitry.find_a_movie.domain;
 
-import com.mersiyanov.dmitry.find_a_movie.POJO.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
 
 /**
  * Created by Dmitry on 20.03.2018.

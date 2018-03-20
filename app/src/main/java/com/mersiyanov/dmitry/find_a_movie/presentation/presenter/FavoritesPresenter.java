@@ -1,9 +1,10 @@
-package com.mersiyanov.dmitry.find_a_movie.presentation;
+package com.mersiyanov.dmitry.find_a_movie.presentation.presenter;
 
 import android.support.v7.app.AppCompatActivity;
 
-import com.mersiyanov.dmitry.find_a_movie.POJO.MovieInfo;
 import com.mersiyanov.dmitry.find_a_movie.data.DataManager;
+import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.presentation.view.FavoritesActivity;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -40,6 +41,7 @@ public class FavoritesPresenter extends BasePresenter {
     @Override
     public void detachView() {
         activity = null;
+        mRealm.close();
     }
 
     public RealmResults<MovieInfo> getFavoritesFromDB() {

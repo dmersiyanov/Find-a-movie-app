@@ -1,4 +1,4 @@
-package com.mersiyanov.dmitry.find_a_movie;
+package com.mersiyanov.dmitry.find_a_movie.presentation.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mersiyanov.dmitry.find_a_movie.POJO.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.R;
+import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
 import com.squareup.picasso.Picasso;
 
 import io.realm.RealmList;

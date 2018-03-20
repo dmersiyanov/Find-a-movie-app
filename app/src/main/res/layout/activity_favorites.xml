@@ -5,7 +5,7 @@
     android:theme="@style/Theme.AppCompat.Light.NoActionBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mersiyanov.dmitry.find_a_movie.presentation.FavoritesActivity"
+    tools:context="com.mersiyanov.dmitry.find_a_movie.presentation.view.FavoritesActivity"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar

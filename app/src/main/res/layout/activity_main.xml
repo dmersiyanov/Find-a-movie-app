@@ -6,7 +6,7 @@
     android:theme="@style/Theme.AppCompat.Light.NoActionBar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mersiyanov.dmitry.find_a_movie.MainActivity">
+    tools:context="com.mersiyanov.dmitry.find_a_movie.presentation.view.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
