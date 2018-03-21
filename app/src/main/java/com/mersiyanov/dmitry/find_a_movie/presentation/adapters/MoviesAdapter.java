@@ -35,7 +35,16 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
     }
 
     public void addMovie(MovieInfo movie) {
+
+//        int position = movies.indexOf(movie);
+//        boolean isFavorite = movies.get(position).getFavorite();
+//        if(movies.contains(movie)) {
+//            movies.remove(movie);
+//            movies.add(0, movie);
+//        } else movies.add(0, movie);
+
         movies.add(0, movie);
+
         notifyDataSetChanged();
     }
 

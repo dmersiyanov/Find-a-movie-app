@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
 
 /**
@@ -21,6 +22,7 @@ public class MovieInfo extends RealmObject {
     }
 
     private boolean isFavorite;
+
 
     @Required
     @SerializedName("Title")
@@ -80,6 +82,8 @@ public class MovieInfo extends RealmObject {
     @SerializedName("imdbVotes")
     @Expose
     private String imdbVotes;
+
+    @PrimaryKey
     @SerializedName("imdbID")
     @Expose
     private String imdbID;

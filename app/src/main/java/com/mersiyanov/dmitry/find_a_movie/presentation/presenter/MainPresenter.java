@@ -15,7 +15,6 @@ public class MainPresenter extends BasePresenter {
 
     private Realm mRealm;
 
-
     public MainPresenter(DataManager dataManager) {
         super(dataManager);
     }

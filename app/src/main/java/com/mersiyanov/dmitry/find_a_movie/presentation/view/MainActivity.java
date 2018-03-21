@@ -112,10 +112,8 @@ public class MainActivity extends AppCompatActivity {
                         if(movieInfo.getResponse().equals("False"))
                             Toast.makeText(getApplicationContext(), movieInfo.getError(), Toast.LENGTH_LONG).show();
                         else  {
-                            moviesAdapter.addMovie(movieInfo);
-
                             mRealm.beginTransaction();
-                            mRealm.copyToRealm(movieInfo);
+                            moviesAdapter.addMovie(mRealm.copyToRealmOrUpdate(movieInfo));
                             mRealm.commitTransaction();
                         }
                     }
@@ -146,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+//
 //        mRealm.beginTransaction();
 //        mRealm.where(MovieInfo.class).equalTo("isFavorite", false).findAll().deleteAllFromRealm();
 //        mRealm.commitTransaction();
@@ -169,15 +167,12 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
             presenter.setFavorite(true, moviesAdapter.getMovie(position));
-
 //            mRealm.beginTransaction();
 //            mRealm.copyToRealm(moviesAdapter.getMovie(position));
 //            mRealm.commitTransaction();
 //            addToFavorites.setImageDrawable(this.getResources().getDrawable(R.drawable.delete_favorite));
 //            addToFavorites.setImageResource(R.drawable.delete_favorite);
             moviesAdapter.notifyDataSetChanged();
-
-
             Toast.makeText(this, "Movie " + title + " added to favorites", Toast.LENGTH_LONG).show();
         }
 
