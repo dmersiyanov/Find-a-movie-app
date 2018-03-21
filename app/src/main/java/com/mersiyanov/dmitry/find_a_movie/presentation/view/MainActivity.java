@@ -10,12 +10,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.mersiyanov.dmitry.find_a_movie.R;
+import com.mersiyanov.dmitry.find_a_movie.data.DataManager;
 import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
 import com.mersiyanov.dmitry.find_a_movie.presentation.adapters.MoviesAdapter;
+import com.mersiyanov.dmitry.find_a_movie.presentation.presenter.MainPresenter;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -28,36 +31,35 @@ import static com.mersiyanov.dmitry.find_a_movie.data.network.RetrofitHelper.get
 
 public class MainActivity extends AppCompatActivity {
 
+    private MainPresenter presenter;
+
     private final String API_KEY = "d160bbfc";
     SearchView searchView;
     MoviesAdapter moviesAdapter;
     private Realm mRealm;
+    private ImageView addToFavorites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        RecyclerView recyclerView = findViewById(R.id.movies_rv);
+
+        DataManager dataManager = new DataManager();
+        presenter = new MainPresenter(dataManager);
 
         mRealm = Realm.getDefaultInstance();
         moviesAdapter = new MoviesAdapter(this, mRealm);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(moviesAdapter);
-
-        searchView = findViewById(R.id.search_bar);
-
-        Toolbar myToolbar = findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-
+        initUI();
 
         mRealm.beginTransaction();
         RealmResults<MovieInfo> movieInfoRealmResults = mRealm.where(MovieInfo.class).findAll();
         mRealm.commitTransaction();
 
         moviesAdapter.addMovies(movieInfoRealmResults);
+
+        presenter.onAttach(this);
 
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -72,8 +74,19 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
 
+    private void initUI() {
+        RecyclerView recyclerView = findViewById(R.id.movies_rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(moviesAdapter);
+        searchView = findViewById(R.id.search_bar);
 
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
+        addToFavorites = findViewById(R.id.favorite_icon);
 
     }
 
@@ -113,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
 
@@ -144,7 +156,33 @@ public class MainActivity extends AppCompatActivity {
 
     public void onFavoriteClick(View view) {
 
-        Toast.makeText(this, "Test", Toast.LENGTH_LONG).show();
+        String title = String.valueOf(view.getTag(R.string.TAG_TITLE));
+        int position = (int) view.getTag(R.string.TAG_POSITION);
+        boolean isFavorite = (boolean) view.getTag(R.string.TAG_FAVORITE);
+
+        if(isFavorite) {
+            presenter.setFavorite(false, moviesAdapter.getMovie(position));
+//            addToFavorites.setImageDrawable(this.getResources().getDrawable(R.drawable.add_favorite));
+//            addToFavorites.setImageResource(R.drawable.add_favorite);
+            moviesAdapter.notifyDataSetChanged();
+            Toast.makeText(this, "Movie " + title + " deleted from favorites", Toast.LENGTH_LONG).show();
+
+        } else {
+            presenter.setFavorite(true, moviesAdapter.getMovie(position));
+
+//            mRealm.beginTransaction();
+//            mRealm.copyToRealm(moviesAdapter.getMovie(position));
+//            mRealm.commitTransaction();
+//            addToFavorites.setImageDrawable(this.getResources().getDrawable(R.drawable.delete_favorite));
+//            addToFavorites.setImageResource(R.drawable.delete_favorite);
+            moviesAdapter.notifyDataSetChanged();
+
+
+            Toast.makeText(this, "Movie " + title + " added to favorites", Toast.LENGTH_LONG).show();
+        }
+
+
+
     }
 
 }

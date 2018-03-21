@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mersiyanov.dmitry.find_a_movie.R;
 import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
@@ -40,10 +39,15 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public MovieInfo getMovie(int position) {
+        return movies.get(position);
+    }
+
     public void addMovies(RealmResults<MovieInfo> realmResults) {
         movies.addAll(realmResults);
         notifyDataSetChanged();
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -63,33 +67,37 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
         if(movieInfo.getFavorite()) {
             holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
-        }
+        } else
+            holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.add_favorite));
 
+        holder.addToFavorites.setTag(R.string.TAG_TITLE, movieInfo.getTitle());
+        holder.addToFavorites.setTag(R.string.TAG_POSITION, position);
+        holder.addToFavorites.setTag(R.string.TAG_FAVORITE, movieInfo.getFavorite());
 
-        holder.addToFavorites.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(movieInfo.getFavorite()) {
-                    mRealm.beginTransaction();
-                    movieInfo.setFavorite(false);
-                    holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.add_favorite));
-                    mRealm.commitTransaction();
-                    notifyDataSetChanged();
-                    Toast.makeText(context, movieInfo.getTitle() + " deleted from favorites", Toast.LENGTH_LONG).show();
-
-                } else {
-                    mRealm.beginTransaction();
-                    movieInfo.setFavorite(true);
-                    mRealm.copyToRealm(movieInfo);
-                    mRealm.commitTransaction();
-                    holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
-                    Toast.makeText(context, movieInfo.getTitle() + " added to favorites", Toast.LENGTH_LONG).show();
-                }
-
-
-            }
-        });
+//        holder.addToFavorites.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if(movieInfo.getFavorite()) {
+//                    mRealm.beginTransaction();
+//                    movieInfo.setFavorite(false);
+//                    holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.add_favorite));
+//                    mRealm.commitTransaction();
+//                    notifyDataSetChanged();
+//                    Toast.makeText(context, movieInfo.getTitle() + " deleted from favorites", Toast.LENGTH_LONG).show();
+//
+//                } else {
+//                    mRealm.beginTransaction();
+//                    movieInfo.setFavorite(true);
+////                    mRealm.copyToRealm(movieInfo);
+//                    mRealm.commitTransaction();
+//                    holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
+//                    Toast.makeText(context, movieInfo.getTitle() + " added to favorites", Toast.LENGTH_LONG).show();
+//                }
+//
+//
+//            }
+//        });
 
     }
 
