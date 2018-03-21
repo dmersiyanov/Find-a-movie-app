@@ -1,6 +1,6 @@
 package com.mersiyanov.dmitry.find_a_movie.data.network;
 
-import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.domain.MovieEntity;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -13,7 +13,7 @@ import rx.Observable;
 public interface ImdbService {
 
     @GET(".")
-    Observable<MovieInfo> getMovieInfo(@Query("apikey") String key, @Query("t") String title);
+    Observable<MovieEntity> getMovieInfo(@Query("apikey") String key, @Query("t") String title);
 
 }
 

@@ -1,11 +1,16 @@
 package com.mersiyanov.dmitry.find_a_movie.presentation.presenter;
 
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.mersiyanov.dmitry.find_a_movie.data.DataManager;
-import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.domain.MovieEntity;
+import com.mersiyanov.dmitry.find_a_movie.presentation.view.MainActivity;
 
-import io.realm.Realm;
+import io.realm.RealmResults;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by dmitrymersiyanov on 21/03/2018.
@@ -13,7 +18,7 @@ import io.realm.Realm;
 
 public class MainPresenter extends BasePresenter {
 
-    private Realm mRealm;
+    private MainActivity mainActivity;
 
     public MainPresenter(DataManager dataManager) {
         super(dataManager);
@@ -21,13 +26,12 @@ public class MainPresenter extends BasePresenter {
 
     @Override
     public void onAttach(AppCompatActivity view) {
-        super.onAttach(view);
-        mRealm = Realm.getDefaultInstance();
+        mainActivity = (MainActivity) view;
     }
 
     @Override
     public AppCompatActivity getView() {
-        return super.getView();
+        return mainActivity;
     }
 
     @Override
@@ -37,13 +41,39 @@ public class MainPresenter extends BasePresenter {
 
     @Override
     public void detachView() {
-        mRealm.close();
-        super.detachView();
+        mainActivity = null;
     }
-    public void setFavorite(boolean isFavorite, MovieInfo movieInfo) {
-        mRealm.beginTransaction();
-        movieInfo.setFavorite(isFavorite);
-        mRealm.commitTransaction();
+    public void setFavorite(boolean isFavorite, MovieEntity movieEntity) {
+        getDataManager().updateFlag(isFavorite, movieEntity);
     }
+
+    public void getMovieFromImdb(String title) {
+        getDataManager().getMovieFromImdb(title).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<MovieEntity>() {
+                    @Override
+                    public void onCompleted() {}
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(mainActivity.getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onNext(MovieEntity movieEntity) {
+                        if(movieEntity.getResponse().equals("False"))
+                            Toast.makeText(mainActivity.getApplicationContext(), movieEntity.getError(), Toast.LENGTH_LONG).show();
+                        else  {
+                            mainActivity.getMoviesAdapter().addMovie(getDataManager().insert(movieEntity));
+                        }
+                    }
+                });
+    }
+
+    public RealmResults<MovieEntity> getAllMoviesFromDB() {
+        return getDataManager().getAll();
+    }
+
+
 
 }

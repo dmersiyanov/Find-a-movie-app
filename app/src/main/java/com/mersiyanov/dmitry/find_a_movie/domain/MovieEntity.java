@@ -1,4 +1,4 @@
-package com.mersiyanov.dmitry.find_a_movie.data;
+package com.mersiyanov.dmitry.find_a_movie.domain;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -11,8 +11,7 @@ import io.realm.annotations.Required;
  * Created by Dmitry on 17.03.2018.
  */
 
-public class MovieInfo extends RealmObject {
-
+public class MovieEntity extends RealmObject {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
@@ -22,7 +21,6 @@ public class MovieInfo extends RealmObject {
     }
 
     private boolean isFavorite;
-
 
     @Required
     @SerializedName("Title")
@@ -107,7 +105,7 @@ public class MovieInfo extends RealmObject {
     private String response;
 
 
-    public MovieInfo(){
+    public MovieEntity(){
 
     }
 

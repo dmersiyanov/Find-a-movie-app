@@ -3,10 +3,9 @@ package com.mersiyanov.dmitry.find_a_movie.presentation.presenter;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mersiyanov.dmitry.find_a_movie.data.DataManager;
-import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.domain.MovieEntity;
 import com.mersiyanov.dmitry.find_a_movie.presentation.view.FavoritesActivity;
 
-import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
@@ -16,7 +15,6 @@ import io.realm.RealmResults;
 public class FavoritesPresenter extends BasePresenter {
 
     private FavoritesActivity activity;
-    private Realm mRealm;
 
     public FavoritesPresenter(DataManager dataManager) {
         super(dataManager);
@@ -26,7 +24,6 @@ public class FavoritesPresenter extends BasePresenter {
     public void onAttach(AppCompatActivity view) {
         activity = (FavoritesActivity) view;
     }
-
 
     @Override
     public AppCompatActivity getView() {
@@ -41,24 +38,18 @@ public class FavoritesPresenter extends BasePresenter {
     @Override
     public void detachView() {
         activity = null;
-        mRealm.close();
     }
 
-    public RealmResults<MovieInfo> getFavoritesFromDB() {
-        mRealm = Realm.getDefaultInstance();
-        mRealm.beginTransaction();
-        RealmResults<MovieInfo> movieInfoRealmResults = mRealm.where(MovieInfo.class).equalTo("isFavorite", true).findAll();
-        mRealm.commitTransaction();
-        if (movieInfoRealmResults.size() == 0) {
+    public RealmResults<MovieEntity> getFavoritesFromDB() {
+        RealmResults<MovieEntity> movieEntityRealmResults = getDataManager().getWithCondition("isFavorite", true);
+        if (movieEntityRealmResults.size() == 0) {
             activity.showNoFavoritesPic();
         }
-        return movieInfoRealmResults;
+        return movieEntityRealmResults;
     }
 
-    public void setFavorite(boolean isFavorite, MovieInfo movieInfo) {
-        mRealm.beginTransaction();
-        movieInfo.setFavorite(isFavorite);
-        mRealm.commitTransaction();
+    public void setFavorite(boolean isFavorite, MovieEntity movieEntity) {
+        getDataManager().updateFlag(isFavorite, movieEntity);
     }
 
 

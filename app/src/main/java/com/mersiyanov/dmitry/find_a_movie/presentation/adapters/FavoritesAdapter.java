@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mersiyanov.dmitry.find_a_movie.R;
-import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.domain.MovieEntity;
 import com.squareup.picasso.Picasso;
 
 import io.realm.RealmList;
@@ -22,21 +22,21 @@ import io.realm.RealmResults;
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
     private Context context;
-    private RealmList<MovieInfo> favoriteMovies = new RealmList<>();
+    private RealmList<MovieEntity> favoriteMovies = new RealmList<>();
 
     public FavoritesAdapter(Context context) {
         this.context = context;
 
     }
 
-    public MovieInfo deleteFavorite(int position) {
-        MovieInfo movieInfo = favoriteMovies.get(position);
+    public MovieEntity deleteFavorite(int position) {
+        MovieEntity movieEntity = favoriteMovies.get(position);
         favoriteMovies.remove(position);
         notifyDataSetChanged();
-        return movieInfo;
+        return movieEntity;
     }
 
-    public void addFavoriteMovies(RealmResults<MovieInfo> realmResults) {
+    public void addFavoriteMovies(RealmResults<MovieEntity> realmResults) {
         favoriteMovies.addAll(realmResults);
         notifyDataSetChanged();
     }
@@ -51,14 +51,14 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final MovieInfo movieInfo = favoriteMovies.get(position);
+        final MovieEntity movieEntity = favoriteMovies.get(position);
 
-        holder.movieTitle.setText(movieInfo.getTitle());
-        holder.movieYear.setText(movieInfo.getYear());
-        Picasso.get().load(movieInfo.getPoster()).resize(350, 350).centerInside().into(holder.moviePoster);
+        holder.movieTitle.setText(movieEntity.getTitle());
+        holder.movieYear.setText(movieEntity.getYear());
+        Picasso.get().load(movieEntity.getPoster()).resize(350, 350).centerInside().into(holder.moviePoster);
         holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
 
-        holder.addToFavorites.setTag(R.string.TAG_TITLE, movieInfo.getTitle());
+        holder.addToFavorites.setTag(R.string.TAG_TITLE, movieEntity.getTitle());
         holder.addToFavorites.setTag(R.string.TAG_POSITION, position);
 
     }

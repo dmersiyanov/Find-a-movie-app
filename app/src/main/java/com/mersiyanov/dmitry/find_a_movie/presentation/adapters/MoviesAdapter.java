@@ -9,10 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mersiyanov.dmitry.find_a_movie.R;
-import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.domain.MovieEntity;
 import com.squareup.picasso.Picasso;
 
-import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
@@ -24,17 +23,13 @@ public class
 MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
     private Context context;
-    private RealmList<MovieInfo> movies = new RealmList<>();
-    private Realm mRealm;
+    private RealmList<MovieEntity> movies = new RealmList<>();
 
-
-    public MoviesAdapter(Context context, Realm realm) {
-        mRealm = realm;
+    public MoviesAdapter(Context context) {
         this.context = context;
-
     }
 
-    public void addMovie(MovieInfo movie) {
+    public void addMovie(MovieEntity movie) {
 
 //        int position = movies.indexOf(movie);
 //        boolean isFavorite = movies.get(position).getFavorite();
@@ -44,15 +39,14 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 //        } else movies.add(0, movie);
 
         movies.add(0, movie);
-
         notifyDataSetChanged();
     }
 
-    public MovieInfo getMovie(int position) {
+    public MovieEntity getMovie(int position) {
         return movies.get(position);
     }
 
-    public void addMovies(RealmResults<MovieInfo> realmResults) {
+    public void addMovies(RealmResults<MovieEntity> realmResults) {
         movies.addAll(realmResults);
         notifyDataSetChanged();
     }
@@ -68,45 +62,18 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final MovieInfo movieInfo = movies.get(position);
+        final MovieEntity movieEntity = movies.get(position);
 
-        holder.movieTitle.setText(movieInfo.getTitle());
-        holder.movieYear.setText(movieInfo.getYear());
-        Picasso.get().load(movieInfo.getPoster()).resize(350, 350).centerInside().into(holder.moviePoster);
+        holder.movieTitle.setText(movieEntity.getTitle());
+        holder.movieYear.setText(movieEntity.getYear());
+        Picasso.get().load(movieEntity.getPoster()).resize(350, 350).centerInside().into(holder.moviePoster);
 
-        if(movieInfo.getFavorite()) {
+        if(movieEntity.getFavorite()) {
             holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
         } else
             holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.add_favorite));
 
-        holder.addToFavorites.setTag(R.string.TAG_TITLE, movieInfo.getTitle());
         holder.addToFavorites.setTag(R.string.TAG_POSITION, position);
-        holder.addToFavorites.setTag(R.string.TAG_FAVORITE, movieInfo.getFavorite());
-
-//        holder.addToFavorites.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                if(movieInfo.getFavorite()) {
-//                    mRealm.beginTransaction();
-//                    movieInfo.setFavorite(false);
-//                    holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.add_favorite));
-//                    mRealm.commitTransaction();
-//                    notifyDataSetChanged();
-//                    Toast.makeText(context, movieInfo.getTitle() + " deleted from favorites", Toast.LENGTH_LONG).show();
-//
-//                } else {
-//                    mRealm.beginTransaction();
-//                    movieInfo.setFavorite(true);
-////                    mRealm.copyToRealm(movieInfo);
-//                    mRealm.commitTransaction();
-//                    holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
-//                    Toast.makeText(context, movieInfo.getTitle() + " added to favorites", Toast.LENGTH_LONG).show();
-//                }
-//
-//
-//            }
-//        });
 
     }
 

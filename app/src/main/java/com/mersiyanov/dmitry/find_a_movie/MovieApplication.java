@@ -9,7 +9,7 @@ import io.realm.RealmConfiguration;
  * Created by Dmitry on 17.03.2018.
  */
 
-public class MovieApp extends Application {
+public class MovieApplication extends Application {
 
     @Override
     public void onCreate() {

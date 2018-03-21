@@ -36,18 +36,18 @@ public class FavoritesActivity extends AppCompatActivity {
 
     }
 
-    private void initRecyclerView() {
-        adapter = new FavoritesAdapter(this);
-        recyclerView = findViewById(R.id.favorites_rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-    }
-
     private void initUI() {
         initToolbar();
         initRecyclerView();
         noFavsPic = findViewById(R.id.no_movies_img);
         presenter.onAttach(this);
+    }
+
+    private void initRecyclerView() {
+        adapter = new FavoritesAdapter(this);
+        recyclerView = findViewById(R.id.favorites_rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 
     private void initToolbar() {

@@ -10,34 +10,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.mersiyanov.dmitry.find_a_movie.R;
 import com.mersiyanov.dmitry.find_a_movie.data.DataManager;
-import com.mersiyanov.dmitry.find_a_movie.data.MovieInfo;
+import com.mersiyanov.dmitry.find_a_movie.domain.MovieEntity;
 import com.mersiyanov.dmitry.find_a_movie.presentation.adapters.MoviesAdapter;
 import com.mersiyanov.dmitry.find_a_movie.presentation.presenter.MainPresenter;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
-import rx.Observable;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
-import static com.mersiyanov.dmitry.find_a_movie.data.network.RetrofitHelper.getApi;
 
 public class MainActivity extends AppCompatActivity {
 
     private MainPresenter presenter;
-
-    private final String API_KEY = "d160bbfc";
-    SearchView searchView;
-    MoviesAdapter moviesAdapter;
-    private Realm mRealm;
-    private ImageView addToFavorites;
+    private SearchView searchView;
+    private MoviesAdapter moviesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,25 +33,17 @@ public class MainActivity extends AppCompatActivity {
 
         DataManager dataManager = new DataManager();
         presenter = new MainPresenter(dataManager);
-
-        mRealm = Realm.getDefaultInstance();
-        moviesAdapter = new MoviesAdapter(this, mRealm);
+        moviesAdapter = new MoviesAdapter(this);
 
         initUI();
 
-        mRealm.beginTransaction();
-        RealmResults<MovieInfo> movieInfoRealmResults = mRealm.where(MovieInfo.class).findAll();
-        mRealm.commitTransaction();
-
-        moviesAdapter.addMovies(movieInfoRealmResults);
-
         presenter.onAttach(this);
-
+        moviesAdapter.addMovies(presenter.getAllMoviesFromDB());
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-               getMovieFromImdb(query);
+               presenter.getMovieFromImdb(query);
                return true;
             }
 
@@ -86,43 +64,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        addToFavorites = findViewById(R.id.favorite_icon);
-
-    }
-
-    private void getMovieFromImdb(String title) {
-
-        Observable <MovieInfo> responseMovies = getApi().getMovieInfo(API_KEY, title);
-        responseMovies.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<MovieInfo>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Toast.makeText(getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-
-                    }
-
-                    @Override
-                    public void onNext(MovieInfo movieInfo) {
-                        if(movieInfo.getResponse().equals("False"))
-                            Toast.makeText(getApplicationContext(), movieInfo.getError(), Toast.LENGTH_LONG).show();
-                        else  {
-                            mRealm.beginTransaction();
-                            moviesAdapter.addMovie(mRealm.copyToRealmOrUpdate(movieInfo));
-                            mRealm.commitTransaction();
-                        }
-                    }
-                });
     }
 
 
     @Override
-
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
@@ -143,41 +88,36 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        presenter.detachView();
         super.onDestroy();
 //
 //        mRealm.beginTransaction();
-//        mRealm.where(MovieInfo.class).equalTo("isFavorite", false).findAll().deleteAllFromRealm();
+//        mRealm.where(MovieEntity.class).equalTo("isFavorite", false).findAll().deleteAllFromRealm();
 //        mRealm.commitTransaction();
 
-        mRealm.close();
     }
 
     public void onFavoriteClick(View view) {
 
-        String title = String.valueOf(view.getTag(R.string.TAG_TITLE));
         int position = (int) view.getTag(R.string.TAG_POSITION);
-        boolean isFavorite = (boolean) view.getTag(R.string.TAG_FAVORITE);
+        MovieEntity movieEntity = moviesAdapter.getMovie(position);
+        String title = movieEntity.getTitle();
+        boolean isFavorite = movieEntity.getFavorite();
 
         if(isFavorite) {
-            presenter.setFavorite(false, moviesAdapter.getMovie(position));
-//            addToFavorites.setImageDrawable(this.getResources().getDrawable(R.drawable.add_favorite));
-//            addToFavorites.setImageResource(R.drawable.add_favorite);
+            presenter.setFavorite(false, movieEntity);
             moviesAdapter.notifyDataSetChanged();
             Toast.makeText(this, "Movie " + title + " deleted from favorites", Toast.LENGTH_LONG).show();
 
         } else {
-            presenter.setFavorite(true, moviesAdapter.getMovie(position));
-//            mRealm.beginTransaction();
-//            mRealm.copyToRealm(moviesAdapter.getMovie(position));
-//            mRealm.commitTransaction();
-//            addToFavorites.setImageDrawable(this.getResources().getDrawable(R.drawable.delete_favorite));
-//            addToFavorites.setImageResource(R.drawable.delete_favorite);
+            presenter.setFavorite(true, movieEntity);
             moviesAdapter.notifyDataSetChanged();
             Toast.makeText(this, "Movie " + title + " added to favorites", Toast.LENGTH_LONG).show();
         }
+    }
 
-
-
+    public MoviesAdapter getMoviesAdapter() {
+        return moviesAdapter;
     }
 
 }
