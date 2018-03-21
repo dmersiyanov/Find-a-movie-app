@@ -22,6 +22,7 @@ public class FavoritesPresenter extends BasePresenter {
 
     @Override
     public void onAttach(AppCompatActivity view) {
+        super.onAttach(view);
         activity = (FavoritesActivity) view;
     }
 
@@ -37,6 +38,7 @@ public class FavoritesPresenter extends BasePresenter {
 
     @Override
     public void detachView() {
+        super.detachView();
         activity = null;
     }
 

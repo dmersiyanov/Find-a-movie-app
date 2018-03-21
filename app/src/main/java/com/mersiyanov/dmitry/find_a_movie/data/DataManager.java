@@ -15,7 +15,7 @@ import static com.mersiyanov.dmitry.find_a_movie.data.network.RetrofitHelper.get
 public class DataManager  {
 
     private final String API_KEY = "d160bbfc";
-    private Realm mRealm = Realm.getDefaultInstance();
+    private Realm mRealm;
 
     public Observable<MovieEntity> getMovieFromImdb(String title) {
         return getApi().getMovieInfo(API_KEY, title);
@@ -51,5 +51,13 @@ public class DataManager  {
 
     public boolean delete(MovieEntity movieEntity) {
         return false;
+    }
+
+    public void initDB() {
+        mRealm = Realm.getDefaultInstance();
+    }
+
+    public void closeDB() {
+        mRealm.close();
     }
 }

@@ -26,6 +26,7 @@ public class MainPresenter extends BasePresenter {
 
     @Override
     public void onAttach(AppCompatActivity view) {
+        super.onAttach(view);
         mainActivity = (MainActivity) view;
     }
 
@@ -41,6 +42,7 @@ public class MainPresenter extends BasePresenter {
 
     @Override
     public void detachView() {
+        super.detachView();
         mainActivity = null;
     }
     public void setFavorite(boolean isFavorite, MovieEntity movieEntity) {

@@ -13,13 +13,13 @@ public class BasePresenter<V extends AppCompatActivity> {
     private V view;
     private DataManager mDataManager;
 
-
     public BasePresenter(DataManager dataManager){
         mDataManager = dataManager;
     }
 
     public void onAttach(V view) {
         this.view = view;
+        mDataManager.initDB();
     }
 
     public V getView() {
@@ -32,6 +32,7 @@ public class BasePresenter<V extends AppCompatActivity> {
 
     public void detachView() {
         view = null;
+        mDataManager.closeDB();
     }
 
 
