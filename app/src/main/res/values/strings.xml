@@ -7,6 +7,6 @@
     <string name="TAG_TITLE">title</string>
     <string name="TAG_POSITION">position</string>
     <string name="TAG_FAVORITE">favorite</string>
-    <string name="delete_search">Delete search</string>
+    <string name="delete_search">Clear search</string>
     <string name="favorites">Favorites</string>
 </resources>

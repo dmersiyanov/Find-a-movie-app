@@ -31,8 +31,6 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
     public void addMovie(MovieEntity movie) {
 
-//        int position = movies.indexOf(movie);
-//        boolean isFavorite = movies.get(position).getFavorite();
 //        if(movies.contains(movie)) {
 //            movies.remove(movie);
 //            movies.add(0, movie);
@@ -40,6 +38,7 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
         movies.add(0, movie);
         notifyDataSetChanged();
+
     }
 
     public MovieEntity getMovie(int position) {
@@ -54,9 +53,7 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
     public void clearAdapter() {
         movies.clear();
         notifyDataSetChanged();
-
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
