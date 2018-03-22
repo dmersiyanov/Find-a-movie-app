@@ -8,6 +8,11 @@
         android:id="@+id/action_favorite"
         android:icon="@drawable/favorites_screen"
         app:showAsAction="always"
-        android:title="Favorites" />
+        android:title="@string/favorites" />
+
+    <item
+        android:id="@+id/action_delete_search"
+        app:showAsAction="never"
+        android:title="@string/delete_search" />
 
 </menu>

@@ -49,9 +49,12 @@ public class DataManager  {
         return movieEntityRealmResults;
     }
 
-    public boolean delete(MovieEntity movieEntity) {
-        return false;
+    public void deleteWithCondition(String fieldName, boolean value) {
+        mRealm.beginTransaction();
+        mRealm.where(MovieEntity.class).equalTo(fieldName, value).findAll().deleteAllFromRealm();
+        mRealm.commitTransaction();
     }
+
 
     public void initDB() {
         mRealm = Realm.getDefaultInstance();

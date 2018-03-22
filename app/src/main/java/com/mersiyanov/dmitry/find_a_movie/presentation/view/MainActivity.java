@@ -13,15 +13,19 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.mersiyanov.dmitry.find_a_movie.MovieApplication;
 import com.mersiyanov.dmitry.find_a_movie.R;
-import com.mersiyanov.dmitry.find_a_movie.data.DataManager;
 import com.mersiyanov.dmitry.find_a_movie.domain.MovieEntity;
 import com.mersiyanov.dmitry.find_a_movie.presentation.adapters.MoviesAdapter;
 import com.mersiyanov.dmitry.find_a_movie.presentation.presenter.MainPresenter;
 
+import javax.inject.Inject;
+
+
 public class MainActivity extends AppCompatActivity {
 
-    private MainPresenter presenter;
+    @Inject
+    MainPresenter presenter;
     private SearchView searchView;
     private MoviesAdapter moviesAdapter;
 
@@ -30,9 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        DataManager dataManager = new DataManager();
-        presenter = new MainPresenter(dataManager);
+        MovieApplication.getComponent().injectsMainPresenter(this);
         moviesAdapter = new MoviesAdapter(this);
 
         initUI();
@@ -81,6 +83,11 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, FavoritesActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.action_delete_search:
+                presenter.deleteFromDb("isFavorite", false);
+                moviesAdapter.clearAdapter();
+                moviesAdapter.addMovies(presenter.getAllMoviesFromDB());
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -98,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onFavoriteClick(View view) {
+        System.out.println("click");
 
         int position = (int) view.getTag(R.string.TAG_POSITION);
         MovieEntity movieEntity = moviesAdapter.getMovie(position);

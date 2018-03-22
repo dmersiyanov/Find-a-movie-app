@@ -76,6 +76,10 @@ public class MainPresenter extends BasePresenter {
         return getDataManager().getAll();
     }
 
+    public void deleteFromDb(String key, boolean value) {
+        getDataManager().deleteWithCondition(key, value);
+    }
+
 
 
 }

@@ -10,14 +10,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.mersiyanov.dmitry.find_a_movie.MovieApplication;
 import com.mersiyanov.dmitry.find_a_movie.R;
-import com.mersiyanov.dmitry.find_a_movie.data.DataManager;
 import com.mersiyanov.dmitry.find_a_movie.presentation.adapters.FavoritesAdapter;
 import com.mersiyanov.dmitry.find_a_movie.presentation.presenter.FavoritesPresenter;
 
+import javax.inject.Inject;
+
 public class FavoritesActivity extends AppCompatActivity {
 
-    private FavoritesPresenter presenter;
+    @Inject
+    FavoritesPresenter presenter;
     private FavoritesAdapter adapter;
     private RecyclerView recyclerView;
     private ImageView noFavsPic;
@@ -27,11 +30,8 @@ public class FavoritesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
 
-        DataManager dataManager = new DataManager();
-        presenter = new FavoritesPresenter(dataManager);
-
+        MovieApplication.getComponent().injectsFavoritesPresenter(this);
         initUI();
-
         adapter.addFavoriteMovies(presenter.getFavoritesFromDB());
 
     }

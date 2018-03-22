@@ -51,6 +51,12 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void clearAdapter() {
+        movies.clear();
+        notifyDataSetChanged();
+
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
