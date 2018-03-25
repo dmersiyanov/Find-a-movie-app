@@ -1,6 +1,5 @@
 package com.mersiyanov.dmitry.find_a_movie.presentation.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,13 +20,7 @@ import io.realm.RealmResults;
 
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
-    private Context context;
     private RealmList<MovieEntity> favoriteMovies = new RealmList<>();
-
-    public FavoritesAdapter(Context context) {
-        this.context = context;
-
-    }
 
     public MovieEntity deleteFavorite(int position) {
         MovieEntity movieEntity = favoriteMovies.get(position);
@@ -56,7 +49,7 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         holder.movieTitle.setText(movieEntity.getTitle());
         holder.movieYear.setText(movieEntity.getYear());
         Picasso.get().load(movieEntity.getPoster()).resize(350, 350).centerInside().into(holder.moviePoster);
-        holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
+        holder.addToFavorites.setImageDrawable(holder.addToFavorites.getContext().getResources().getDrawable(R.drawable.delete_favorite));
 
         holder.addToFavorites.setTag(R.string.TAG_TITLE, movieEntity.getTitle());
         holder.addToFavorites.setTag(R.string.TAG_POSITION, position);

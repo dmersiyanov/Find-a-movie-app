@@ -1,24 +1,31 @@
 package com.mersiyanov.dmitry.find_a_movie.data;
 
+import com.mersiyanov.dmitry.find_a_movie.data.network.RetrofitHelper;
 import com.mersiyanov.dmitry.find_a_movie.domain.MovieEntity;
+
+import javax.inject.Singleton;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.Observable;
 
-import static com.mersiyanov.dmitry.find_a_movie.data.network.RetrofitHelper.getApi;
-
 /**
  * Created by Dmitry on 20.03.2018.
  */
 
+@Singleton
 public class DataManager  {
 
     private final String API_KEY = "d160bbfc";
     private Realm mRealm;
+    private RetrofitHelper retrofitHelper;
+
+    public DataManager(RetrofitHelper retrofitHelper) {
+        this.retrofitHelper = retrofitHelper;
+    }
 
     public Observable<MovieEntity> getMovieFromImdb(String title) {
-        return getApi().getMovieInfo(API_KEY, title);
+        return retrofitHelper.getApi().getMovieInfo(API_KEY, title);
     }
 
     public MovieEntity insert(MovieEntity movieEntity) {

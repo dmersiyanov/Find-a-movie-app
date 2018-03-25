@@ -12,9 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitHelper {
 
-    private static ImdbService imdbService;
-
-    public static Retrofit getRetrofit(){
+    private static Retrofit getRetrofit(){
         final OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
                 .build();
@@ -28,9 +26,8 @@ public class RetrofitHelper {
 
     }
 
-    public static ImdbService getApi() {
-        imdbService = getRetrofit().create(ImdbService.class);
-        return imdbService;
+    public ImdbService getApi() {
+        return getRetrofit().create(ImdbService.class);
     }
 
 }

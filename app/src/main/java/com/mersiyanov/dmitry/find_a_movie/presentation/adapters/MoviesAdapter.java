@@ -1,6 +1,5 @@
 package com.mersiyanov.dmitry.find_a_movie.presentation.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +21,9 @@ import io.realm.RealmResults;
 public class
 MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
-    private Context context;
-    private RealmList<MovieEntity> movies = new RealmList<>();
+    // TODO implement https://antonioleiva.com/recyclerview-listener/
 
-    public MoviesAdapter(Context context) {
-        this.context = context;
-    }
+    private RealmList<MovieEntity> movies = new RealmList<>();
 
     public void addMovie(MovieEntity movie) {
 
@@ -72,9 +68,9 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
         Picasso.get().load(movieEntity.getPoster()).resize(350, 350).centerInside().into(holder.moviePoster);
 
         if(movieEntity.getFavorite()) {
-            holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.delete_favorite));
+            holder.addToFavorites.setImageDrawable(holder.addToFavorites.getContext().getResources().getDrawable(R.drawable.delete_favorite));
         } else
-            holder.addToFavorites.setImageDrawable(context.getResources().getDrawable(R.drawable.add_favorite));
+            holder.addToFavorites.setImageDrawable(holder.addToFavorites.getContext().getResources().getDrawable(R.drawable.add_favorite));
 
         holder.addToFavorites.setTag(R.string.TAG_POSITION, position);
 

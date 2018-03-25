@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         MovieApplication.getComponent().injectsMainPresenter(this);
-        moviesAdapter = new MoviesAdapter(this);
+        moviesAdapter = new MoviesAdapter();
 
         initUI();
 

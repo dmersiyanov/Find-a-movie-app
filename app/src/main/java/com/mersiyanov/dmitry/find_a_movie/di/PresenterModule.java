@@ -1,6 +1,7 @@
 package com.mersiyanov.dmitry.find_a_movie.di;
 
 import com.mersiyanov.dmitry.find_a_movie.data.DataManager;
+import com.mersiyanov.dmitry.find_a_movie.data.network.RetrofitHelper;
 import com.mersiyanov.dmitry.find_a_movie.presentation.presenter.FavoritesPresenter;
 import com.mersiyanov.dmitry.find_a_movie.presentation.presenter.MainPresenter;
 
@@ -15,8 +16,13 @@ import dagger.Provides;
 public class PresenterModule {
 
     @Provides
-    DataManager provideDataManager() {
-        return new DataManager();
+    RetrofitHelper provideRetrofitHelper() {
+        return new RetrofitHelper();
+    }
+
+    @Provides
+    DataManager provideDataManager(RetrofitHelper retrofitHelper) {
+        return new DataManager(retrofitHelper);
     }
 
     @Provides
@@ -28,5 +34,7 @@ public class PresenterModule {
     FavoritesPresenter provideFavoritesPresenter(DataManager dataManager) {
         return new FavoritesPresenter(dataManager);
     }
+
+
 
 }
