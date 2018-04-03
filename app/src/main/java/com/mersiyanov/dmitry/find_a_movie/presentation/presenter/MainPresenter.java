@@ -7,6 +7,8 @@ import com.mersiyanov.dmitry.find_a_movie.data.DataManager;
 import com.mersiyanov.dmitry.find_a_movie.domain.MovieEntity;
 import com.mersiyanov.dmitry.find_a_movie.presentation.view.MainActivity;
 
+import java.util.Date;
+
 import io.realm.RealmResults;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -66,6 +68,7 @@ public class MainPresenter extends BasePresenter {
                         if(movieEntity.getResponse().equals("False"))
                             Toast.makeText(mainActivity.getApplicationContext(), movieEntity.getError(), Toast.LENGTH_LONG).show();
                         else  {
+                            movieEntity.setDateTime(new Date());
                             mainActivity.getMoviesAdapter().addMovie(getDataManager().insert(movieEntity));
                         }
                     }

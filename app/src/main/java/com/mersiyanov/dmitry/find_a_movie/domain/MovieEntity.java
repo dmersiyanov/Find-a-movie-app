@@ -3,6 +3,8 @@ package com.mersiyanov.dmitry.find_a_movie.domain;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -21,6 +23,16 @@ public class MovieEntity extends RealmObject {
     }
 
     private boolean isFavorite;
+
+    private Date dateTime;
+
+    public Date getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Date datetime) {
+        this.dateTime = datetime;
+    }
 
     @Required
     @SerializedName("Title")

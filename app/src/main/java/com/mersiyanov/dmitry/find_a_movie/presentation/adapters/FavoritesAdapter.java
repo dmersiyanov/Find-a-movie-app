@@ -11,6 +11,9 @@ import com.mersiyanov.dmitry.find_a_movie.R;
 import com.mersiyanov.dmitry.find_a_movie.domain.MovieEntity;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
@@ -31,6 +34,12 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
 
     public void addFavoriteMovies(RealmResults<MovieEntity> realmResults) {
         favoriteMovies.addAll(realmResults);
+        Collections.sort(favoriteMovies, new Comparator<MovieEntity>() {
+            @Override
+            public int compare(MovieEntity o1, MovieEntity o2) {
+                return o2.getDateTime().compareTo(o1.getDateTime());
+            }
+        });
         notifyDataSetChanged();
     }
 

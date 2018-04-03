@@ -11,6 +11,10 @@ import com.mersiyanov.dmitry.find_a_movie.R;
 import com.mersiyanov.dmitry.find_a_movie.domain.MovieEntity;
 import com.squareup.picasso.Picasso;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
@@ -24,15 +28,31 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
     // TODO implement https://antonioleiva.com/recyclerview-listener/
 
     private RealmList<MovieEntity> movies = new RealmList<>();
+    private LinkedHashSet<MovieEntity> movieEntities = new LinkedHashSet<>();
+
 
     public void addMovie(MovieEntity movie) {
+
 
 //        if(movies.contains(movie)) {
 //            movies.remove(movie);
 //            movies.add(0, movie);
 //        } else movies.add(0, movie);
 
+//        Collections.sort(myList, new Comparator<MyObject>() {
+//            public int compare(MyObject o1, MyObject o2) {
+//                return o1.getDateTime().compareTo(o2.getDateTime());
+//            }
+//        });
+
+
         movies.add(0, movie);
+//        Collections.sort(movies, new Comparator<MovieEntity>() {
+//            @Override
+//            public int compare(MovieEntity o1, MovieEntity o2) {
+//                return o1.getDateTime().compareTo(o2.getDateTime());
+//            }
+//        });
         notifyDataSetChanged();
 
     }
@@ -43,6 +63,12 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
     public void addMovies(RealmResults<MovieEntity> realmResults) {
         movies.addAll(realmResults);
+        Collections.sort(movies, new Comparator<MovieEntity>() {
+            @Override
+            public int compare(MovieEntity o1, MovieEntity o2) {
+                return o2.getDateTime().compareTo(o1.getDateTime());
+            }
+        });
         notifyDataSetChanged();
     }
 
