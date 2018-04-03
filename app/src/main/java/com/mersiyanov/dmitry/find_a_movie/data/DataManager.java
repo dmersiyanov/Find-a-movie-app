@@ -56,6 +56,13 @@ public class DataManager  {
         return movieEntityRealmResults;
     }
 
+    public RealmResults<MovieEntity> getWithCondition(String fieldName, String value) {
+        mRealm.beginTransaction();
+        RealmResults<MovieEntity> movieEntityRealmResults = mRealm.where(MovieEntity.class).equalTo(fieldName, value).findAll();
+        mRealm.commitTransaction();
+        return movieEntityRealmResults;
+    }
+
     public void deleteWithCondition(String fieldName, boolean value) {
         mRealm.beginTransaction();
         mRealm.where(MovieEntity.class).equalTo(fieldName, value).findAll().deleteAllFromRealm();

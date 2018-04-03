@@ -32,27 +32,10 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
 
     public void addMovie(MovieEntity movie) {
-
-
-//        if(movies.contains(movie)) {
-//            movies.remove(movie);
-//            movies.add(0, movie);
-//        } else movies.add(0, movie);
-
-//        Collections.sort(myList, new Comparator<MyObject>() {
-//            public int compare(MyObject o1, MyObject o2) {
-//                return o1.getDateTime().compareTo(o2.getDateTime());
-//            }
-//        });
-
-
-        movies.add(0, movie);
-//        Collections.sort(movies, new Comparator<MovieEntity>() {
-//            @Override
-//            public int compare(MovieEntity o1, MovieEntity o2) {
-//                return o1.getDateTime().compareTo(o2.getDateTime());
-//            }
-//        });
+        if(movies.contains(movie)) {
+            movies.remove(movie);
+            movies.add(0, movie);
+        } else movies.add(0, movie);
         notifyDataSetChanged();
 
     }

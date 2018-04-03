@@ -9,6 +9,7 @@ import com.mersiyanov.dmitry.find_a_movie.presentation.view.MainActivity;
 
 import java.util.Date;
 
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -52,27 +53,41 @@ public class MainPresenter extends BasePresenter {
     }
 
     public void getMovieFromImdb(String title) {
-        getDataManager().getMovieFromImdb(title).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<MovieEntity>() {
-                    @Override
-                    public void onCompleted() {}
+        DataManager dataManager = getDataManager();
+        String firstCapTitle = title.substring(0, 1).toUpperCase() + title.substring(1);
+        firstCapTitle = firstCapTitle.trim();
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toast.makeText(mainActivity.getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                    }
+        RealmList<MovieEntity> moviesFromDB = new RealmList<>();
+        moviesFromDB.addAll(0, dataManager.getWithCondition("title", firstCapTitle));
 
-                    @Override
-                    public void onNext(MovieEntity movieEntity) {
-                        if(movieEntity.getResponse().equals("False"))
-                            Toast.makeText(mainActivity.getApplicationContext(), movieEntity.getError(), Toast.LENGTH_LONG).show();
-                        else  {
-                            movieEntity.setDateTime(new Date());
-                            mainActivity.getMoviesAdapter().addMovie(getDataManager().insert(movieEntity));
+        if(moviesFromDB.isEmpty()) {
+
+            dataManager.getMovieFromImdb(title).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<MovieEntity>() {
+                        @Override
+                        public void onCompleted() {}
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Toast.makeText(mainActivity.getApplicationContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                         }
-                    }
-                });
+
+                        @Override
+                        public void onNext(MovieEntity movieEntity) {
+                            if(movieEntity.getResponse().equals("False"))
+                                Toast.makeText(mainActivity.getApplicationContext(), movieEntity.getError(), Toast.LENGTH_LONG).show();
+                            else  {
+                                movieEntity.setDateTime(new Date());
+                                mainActivity.getMoviesAdapter().addMovie(getDataManager().insert(movieEntity));
+                            }
+                        }
+                    });
+        } else {
+
+            mainActivity.getMoviesAdapter().addMovie(moviesFromDB.get(0));
+
+        }
     }
 
     public RealmResults<MovieEntity> getAllMoviesFromDB() {
@@ -82,7 +97,4 @@ public class MainPresenter extends BasePresenter {
     public void deleteFromDb(String key, boolean value) {
         getDataManager().deleteWithCondition(key, value);
     }
-
-
-
 }
