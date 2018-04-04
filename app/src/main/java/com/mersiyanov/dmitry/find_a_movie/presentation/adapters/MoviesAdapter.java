@@ -13,7 +13,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashSet;
+
+import javax.annotation.Nullable;
 
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -25,11 +26,12 @@ import io.realm.RealmResults;
 public class
 MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
-    // TODO implement https://antonioleiva.com/recyclerview-listener/
-
     private RealmList<MovieEntity> movies = new RealmList<>();
-    private LinkedHashSet<MovieEntity> movieEntities = new LinkedHashSet<>();
+    private OnFavoriteClickListener onFavoriteClickListener;
 
+    public void setOnFavoriteClickListener(@Nullable OnFavoriteClickListener onFavoriteClickListener) {
+        this.onFavoriteClickListener = onFavoriteClickListener;
+    }
 
     public void addMovie(MovieEntity movie) {
         if(movies.contains(movie)) {
@@ -38,10 +40,6 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
         } else movies.add(0, movie);
         notifyDataSetChanged();
 
-    }
-
-    public MovieEntity getMovie(int position) {
-        return movies.get(position);
     }
 
     public void addMovies(RealmResults<MovieEntity> realmResults) {
@@ -81,7 +79,14 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
         } else
             holder.addToFavorites.setImageDrawable(holder.addToFavorites.getContext().getResources().getDrawable(R.drawable.add_favorite));
 
-        holder.addToFavorites.setTag(R.string.TAG_POSITION, position);
+        holder.addToFavorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onFavoriteClickListener != null) {
+                    onFavoriteClickListener.onFavoriteClick(movieEntity);
+                }
+            }
+        });
 
     }
 
@@ -104,5 +109,9 @@ MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
             addToFavorites = itemView.findViewById(R.id.favorite_icon);
 
         }
+    }
+
+    public interface OnFavoriteClickListener {
+        void onFavoriteClick(MovieEntity item);
     }
 }

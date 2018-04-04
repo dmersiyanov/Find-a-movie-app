@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -54,6 +53,18 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        moviesAdapter.setOnFavoriteClickListener(onFavoriteClickListener);
+    }
+
+    @Override
+    protected void onStop() {
+        moviesAdapter.setOnFavoriteClickListener(null);
+        super.onStop();
     }
 
     private void initUI() {
@@ -104,28 +115,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void onFavoriteClick(View view) {
-        System.out.println("click");
-
-        int position = (int) view.getTag(R.string.TAG_POSITION);
-        MovieEntity movieEntity = moviesAdapter.getMovie(position);
-        String title = movieEntity.getTitle();
-        boolean isFavorite = movieEntity.getFavorite();
-
-        if(isFavorite) {
-            presenter.setFavorite(false, movieEntity);
-            moviesAdapter.notifyDataSetChanged();
-            Toast.makeText(this, "Movie " + title + " deleted from favorites", Toast.LENGTH_LONG).show();
-
-        } else {
-            presenter.setFavorite(true, movieEntity);
-            moviesAdapter.notifyDataSetChanged();
-            Toast.makeText(this, "Movie " + title + " added to favorites", Toast.LENGTH_LONG).show();
-        }
-    }
-
     public MoviesAdapter getMoviesAdapter() {
         return moviesAdapter;
     }
+
+    private final MoviesAdapter.OnFavoriteClickListener onFavoriteClickListener = new MoviesAdapter.OnFavoriteClickListener() {
+        @Override
+        public void onFavoriteClick(MovieEntity movie) {
+            if(movie.getFavorite()) {
+                presenter.setFavorite(false, movie);
+                moviesAdapter.notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(), "Movie " + movie.getTitle() + " deleted from favorites", Toast.LENGTH_LONG).show();
+
+            } else {
+                presenter.setFavorite(true, movie);
+                moviesAdapter.notifyDataSetChanged();
+                Toast.makeText(getApplicationContext(), "Movie " + movie.getTitle() + " added to favorites", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
 
 }

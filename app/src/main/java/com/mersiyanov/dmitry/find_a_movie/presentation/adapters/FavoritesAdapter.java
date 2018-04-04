@@ -14,6 +14,8 @@ import com.squareup.picasso.Picasso;
 import java.util.Collections;
 import java.util.Comparator;
 
+import javax.annotation.Nullable;
+
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
@@ -24,6 +26,11 @@ import io.realm.RealmResults;
 public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.ViewHolder> {
 
     private RealmList<MovieEntity> favoriteMovies = new RealmList<>();
+    private OnFavoriteClickListener onFavoriteClickListener;
+
+    public void setOnFavoriteClickListener(@Nullable OnFavoriteClickListener onFavoriteClickListener) {
+        this.onFavoriteClickListener = onFavoriteClickListener;
+    }
 
     public MovieEntity deleteFavorite(int position) {
         MovieEntity movieEntity = favoriteMovies.get(position);
@@ -60,8 +67,12 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
         Picasso.get().load(movieEntity.getPoster()).resize(350, 350).centerInside().into(holder.moviePoster);
         holder.addToFavorites.setImageDrawable(holder.addToFavorites.getContext().getResources().getDrawable(R.drawable.delete_favorite));
 
-        holder.addToFavorites.setTag(R.string.TAG_TITLE, movieEntity.getTitle());
-        holder.addToFavorites.setTag(R.string.TAG_POSITION, position);
+        holder.addToFavorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFavoriteClickListener.onFavoriteClick(movieEntity, position);
+            }
+        });
 
     }
 
@@ -82,7 +93,11 @@ public class FavoritesAdapter extends RecyclerView.Adapter<FavoritesAdapter.View
             movieYear = itemView.findViewById(R.id.movie_year);
             moviePoster = itemView.findViewById(R.id.movie_poster);
             addToFavorites = itemView.findViewById(R.id.favorite_icon);
-
         }
     }
+
+    public interface OnFavoriteClickListener {
+        void onFavoriteClick(MovieEntity item, int position);
+    }
+
 }

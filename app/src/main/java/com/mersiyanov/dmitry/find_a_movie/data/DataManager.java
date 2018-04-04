@@ -28,7 +28,7 @@ public class DataManager  {
         return retrofitHelper.getApi().getMovieInfo(API_KEY, title);
     }
 
-    public MovieEntity insert(MovieEntity movieEntity) {
+    public MovieEntity insert(final MovieEntity movieEntity) {
         mRealm.beginTransaction();
         MovieEntity movie = mRealm.copyToRealmOrUpdate(movieEntity);
         mRealm.commitTransaction();
@@ -36,6 +36,12 @@ public class DataManager  {
     }
 
     public void updateFlag(boolean isFavorite, MovieEntity movieEntity) {
+//        mRealm.executeTransaction(new Realm.Transaction() {
+//            @Override
+//            public void execute(Realm realm) {
+//
+//            }
+//        });
         mRealm.beginTransaction();
         movieEntity.setFavorite(isFavorite);
         mRealm.commitTransaction();

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.mersiyanov.dmitry.find_a_movie.MovieApplication;
 import com.mersiyanov.dmitry.find_a_movie.R;
+import com.mersiyanov.dmitry.find_a_movie.domain.MovieEntity;
 import com.mersiyanov.dmitry.find_a_movie.presentation.adapters.FavoritesAdapter;
 import com.mersiyanov.dmitry.find_a_movie.presentation.presenter.FavoritesPresenter;
 
@@ -36,6 +37,18 @@ public class FavoritesActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.setOnFavoriteClickListener(onFavoriteClickListener);
+    }
+
+    @Override
+    protected void onStop() {
+        adapter.setOnFavoriteClickListener(null);
+        super.onStop();
+    }
+
     private void initUI() {
         initToolbar();
         initRecyclerView();
@@ -57,20 +70,23 @@ public class FavoritesActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
     }
 
-    public void onFavoriteClick(View view) {
-        String title = String.valueOf(view.getTag(R.string.TAG_TITLE));
-        int position = (int) view.getTag(R.string.TAG_POSITION);
-        presenter.setFavorite(false, adapter.deleteFavorite(position));
-        Toast.makeText(this, "Movie " + title + " deleted from favorites", Toast.LENGTH_LONG).show();
-        if(adapter.getItemCount() == 0) {
-            showNoFavoritesPic();
-        }
-    }
 
     public void showNoFavoritesPic() {
         recyclerView.setVisibility(View.GONE);
         noFavsPic.setVisibility(View.VISIBLE);
     }
+
+
+    private final FavoritesAdapter.OnFavoriteClickListener onFavoriteClickListener = new FavoritesAdapter.OnFavoriteClickListener() {
+        @Override
+        public void onFavoriteClick(MovieEntity item, int position) {
+            presenter.setFavorite(false, adapter.deleteFavorite(position));
+            Toast.makeText(getApplicationContext(), "Movie " + item.getTitle() + " deleted from favorites", Toast.LENGTH_LONG).show();
+            if(adapter.getItemCount() == 0) {
+                showNoFavoritesPic();
+            }
+        }
+    };
 
     @Override
     protected void onDestroy() {
