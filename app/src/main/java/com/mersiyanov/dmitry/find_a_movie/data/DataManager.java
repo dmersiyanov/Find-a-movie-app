@@ -28,6 +28,8 @@ public class DataManager  {
         return retrofitHelper.getApi().getMovieInfo(API_KEY, title);
     }
 
+    // TODO: add realm listeners instead of returning objects after insertion
+
     public MovieEntity insert(final MovieEntity movieEntity) {
         mRealm.beginTransaction();
         MovieEntity movie = mRealm.copyToRealmOrUpdate(movieEntity);
@@ -35,18 +37,14 @@ public class DataManager  {
         return movie;
     }
 
-    public void updateFlag(boolean isFavorite, MovieEntity movieEntity) {
-//        mRealm.executeTransaction(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//
-//            }
-//        });
-        mRealm.beginTransaction();
-        movieEntity.setFavorite(isFavorite);
-        mRealm.commitTransaction();
+    public void updateFlag(final boolean isFavorite, final MovieEntity movieEntity) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                movieEntity.setFavorite(isFavorite);
+            }
+        });
     }
-
 
     public RealmResults<MovieEntity> getAll() {
         mRealm.beginTransaction();
@@ -69,12 +67,14 @@ public class DataManager  {
         return movieEntityRealmResults;
     }
 
-    public void deleteWithCondition(String fieldName, boolean value) {
-        mRealm.beginTransaction();
-        mRealm.where(MovieEntity.class).equalTo(fieldName, value).findAll().deleteAllFromRealm();
-        mRealm.commitTransaction();
+    public void deleteWithCondition(final String fieldName, final boolean value) {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                mRealm.where(MovieEntity.class).equalTo(fieldName, value).findAll().deleteAllFromRealm();
+            }
+        });
     }
-
 
     public void initDB() {
         mRealm = Realm.getDefaultInstance();
